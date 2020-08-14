@@ -36,7 +36,7 @@ jobs:
 
 # master branch deploys to the 'prod' stage
     - <<: *DEPLOY_SERVICE_JOB
-      name: "Deploy "
+      name: "Deploy Prod Wetter API"
       if: type = push AND branch = master
       env:
         - SERVICE_PATH="wetter-api"
