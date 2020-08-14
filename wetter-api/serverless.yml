@@ -13,8 +13,9 @@ functions:
     handler: handler.hello
     events: 
       - http:
-        path: hallowetter
-        method: get
+          path: /hallowetter
+          method: get
+          cors: true
   # getWeather:
   #   handler: handler.getWeather
   #   events:
