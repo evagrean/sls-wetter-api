@@ -1,13 +1,11 @@
 'use strict';
 module.exports.hello = async event => {
 
-  let greeting = event.queryStringParameters.name;
-
   return {
     statusCode: 200,
     body: JSON.stringify(
       {
-        message: greeting,
+        message: 'Hello World',
         input: event,
       },
       null,
