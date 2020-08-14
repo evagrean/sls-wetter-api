@@ -19,7 +19,8 @@ module.exports.hello = async event => {
     },
     body: JSON.stringify(
       {
-        message: `The temperature is ${temperature}`
+        message: `The temperature is ${temperature}`,
+        input: event,
       },
       null,
       2
