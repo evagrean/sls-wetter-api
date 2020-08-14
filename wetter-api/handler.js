@@ -4,14 +4,6 @@ const axios = require('axios');
 
 module.exports.hello = async event => {
 
-  const weatherURL = 'http://api.openweathermap.org/data/2.5/weather?APPID=b13002d47c5a135d4b791e6e956f1137&units=metric&q=Berlin';
-
-  const weatherInfo = await axios.get(weatherURL);
-
-  let temperature = weatherInfo.data.main.temp;
-
-  console.log(weatherInfo.data.temp);
-
   return {
     statusCode: 200,
     headers: {
@@ -19,7 +11,7 @@ module.exports.hello = async event => {
     },
     body: JSON.stringify(
       {
-        message: `The temperature is ${temperature}`,
+        message: 'Hello World',
         input: event,
       },
       null,
