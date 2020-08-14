@@ -9,14 +9,16 @@ provider:
   region: eu-central-1
 
 functions:
-  getWeather:
-    handler: handler.getWeather
-    events:
-      - http:
-          path: wetter/{cityName}
-          method: get
-          request:
-            parameters:
-              paths:
-                cityName: true
-          cors: true
+  hello:
+    handler: handler.hello
+  # getWeather:
+  #   handler: handler.getWeather
+  #   events:
+  #     - http:
+  #         path: wetter/{cityName}
+  #         method: get
+  #         request:
+  #           parameters:
+  #             paths:
+  #               cityName: true
+  #         cors: true
