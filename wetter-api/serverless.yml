@@ -11,6 +11,10 @@ provider:
 functions:
   hello:
     handler: handler.hello
+    events: 
+      http:
+        path: hallo
+        method: get
   # getWeather:
   #   handler: handler.getWeather
   #   events:
