@@ -1,53 +1,43 @@
-const axios = require('axios');
-
 'use strict';
 
-module.exports.hello = async event => {
+const axios = require('axios');
 
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-    body: JSON.stringify(
-      {
-        message: 'Hello World',
-        input: event,
+module.exports.getTemp = async event => {
+
+  // City name passed through query string parameter in GET request
+  // Used to make specific request to weather API
+  let cityName = event.queryStringParameters.stadt
+
+  const apiURL = 'http://api.openweathermap.org/data/2.5/weather?APPID=b13002d47c5a135d4b791e6e956f1137&units=metric&q='
+    + `${cityName}`;
+
+  const weatherInfo = await axios.get(apiURL);
+  const city = weatherInfo.data.name;
+  const temp = weatherInfo.data.main.temp;
+
+  if (weatherInfo.data.sys.country === 'DE') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
       },
-      null,
-      2
-    ),
-  };
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+      body: JSON.stringify(
+        {
+          summary: `In ${city} hat es heute ${temp} °C`
+        },
+      ),
+    };
+  } else {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify(
+        {
+          summary: `${city} ist keine deutsche Stadt.... Aber es hat dort gerade ${temp} °C`
+        },
+      )
+    };
+  }
 };
-
-// const axios = require('axios');
-
-// 'use strict';
-
-// module.exports.getWeather = async event => {
-
-//   // City name supplied as path parameter
-//   let city = event.pathParameters.cityName;
-
-//   // OpenWeatherMap API endpoint
-//   // added metric to units query parameter to use Celsius
-//   const endpoint = 'http://api.openweathermap.org/data/2.5/weather?APPID=b13002d47c5a135d4b791e6e956f1137&units=metric'
-//     + `&q=${city}`;
-
-//   const weatherInfo = await axios.get(endpoint);
-
-//   return {
-//     statusCode: 200,
-//     headers: {
-//       'Access-Control-Allow-Origin': '*',
-//     },
-//     body: JSON.stringify(
-//       { summary: `In ${weatherInfo.data.name} sind es heute ${weatherInfo.data.main.temp} Grad Celsius` },
-//       null,
-//       2
-//     ),
-//   };
-
-// };
