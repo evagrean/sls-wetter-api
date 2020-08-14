@@ -14,7 +14,6 @@ functions:
     events: 
       http:
         path: hallo
-        method: any
   # getWeather:
   #   handler: handler.getWeather
   #   events:
