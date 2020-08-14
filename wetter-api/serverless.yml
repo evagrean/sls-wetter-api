@@ -11,9 +11,6 @@ provider:
 functions:
   hello:
     handler: handler.hello
-    events: 
-      http:
-        path: hallo
   # getWeather:
   #   handler: handler.getWeather
   #   events:
