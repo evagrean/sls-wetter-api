@@ -9,10 +9,10 @@ module.exports.getWeather = async event => {
 
   // OpenWeatherMap API endpoint
   // added metric to units query parameter to use Celsius
-  const openweatherURL = 'http://api.openweathermap.org/data/2.5/weather?APPID=b13002d47c5a135d4b791e6e956f1137&units=metric'
+  const endpoint = 'http://api.openweathermap.org/data/2.5/weather?APPID=b13002d47c5a135d4b791e6e956f1137&units=metric'
     + `&q=${city}`;
 
-  const weatherInfo = await axios.get(openweatherURL);
+  const weatherInfo = await axios.get(endpoint);
 
   return {
     statusCode: 200,
