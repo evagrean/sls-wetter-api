@@ -1,29 +1,18 @@
 service: wetter-api
 
-custom: 
-  stage: ${opt:stage, self:provider.stage}
-
 provider:
   name: aws
   runtime: nodejs12.x
   region: eu-central-1
 
 functions:
-  hello:
-    handler: handler.hello
-    events: 
-      - http:
-          path: /hallowetter
+  getTemp:
+    handler: handler.getTemp
+    events:
+       - http:
+          path: wetter
           method: get
-          cors: true
-  # getWeather:
-  #   handler: handler.getWeather
-  #   events:
-  #     - http:
-  #         path: wetter/{cityName}
-  #         method: get
-  #         request:
-  #           parameters:
-  #             paths:
-  #               cityName: true
-  #         cors: true
+          request:
+            parameters:
+              querystrings:
+                url: true
