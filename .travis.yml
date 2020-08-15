@@ -25,23 +25,23 @@ environments:
     - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY_DEVELOPMENT}
 jobs:
   include:
-    # develop branch deploys to the 'dev' stage
+    # develop and other non-master branches deploys to the 'dev' stage
     - <<: *DEPLOY_SERVICE_JOB
       name: "Deploy Wetter API"
-      if: type = push AND branch = development
+      if: type = push AND NOT branch = master
       env:
         - SERVICE_PATH="wetter-api"
         - STAGE_NAME=dev
         - *DEVELOPMENT_ENV 
 
     # pull requests deploy to the 'prod' stage after merged into master
-    - <<: *DEPLOY_SERVICE_JOB
-      name: "Deploy Wetter API"
-      if: type = pull_request
-      env:
-        - SERVICE_PATH="wetter-api"
-        - STAGE_NAME=prod
-        - *PRODUCTION_ENV
+    # - <<: *DEPLOY_SERVICE_JOB
+    #   name: "Deploy Wetter API"
+    #   if: type = pull_request
+    #   env:
+    #     - SERVICE_PATH="wetter-api"
+    #     - STAGE_NAME=prod
+    #     - *PRODUCTION_ENV
 
     # master branch deploys to the 'prod' stage
     - <<: *DEPLOY_SERVICE_JOB
