@@ -30,7 +30,7 @@ jobs:
     # develop branch deploys to the 'dev' stage
     - <<: *DEPLOY_SERVICE_JOB
       name: "Deploy Wetter API"
-      if: type = push branch = development
+      if: type = push AND branch = development
       env:
         - SERVICE_PATH="wetter-api"
         - STAGE_NAME=dev
