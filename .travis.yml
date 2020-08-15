@@ -36,24 +36,6 @@ jobs:
         - STAGE_NAME=dev
         - *DEVELOPMENT_ENV 
 
-    # # pull requests to development deploy to the 'dev' stage
-    # - <<: *DEPLOY_SERVICE_JOB
-    #   name: "Deploy Wetter API"
-    #   if: type = pull_request AND branch = development
-    #   env:
-    #     - SERVICE_PATH="wetter-api"
-    #     - STAGE_NAME=dev
-    #     - *DEVELOPMENT_ENV
-
-    # # pull requests to master deploy to the 'prod' stage
-    # - <<: *DEPLOY_SERVICE_JOB
-    #   name: "Deploy Wetter API"
-    #   if: type = pull_request AND branch = master
-    #   env:
-    #     - SERVICE_PATH="wetter-api"
-    #     - STAGE_NAME=prod
-    #     - *PRODUCTION_ENV
-
     # master branch deploys to the 'prod' stage
     - <<: *DEPLOY_SERVICE_JOB
       name: "Deploy Prod Wetter API"
