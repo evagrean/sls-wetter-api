@@ -41,5 +41,3 @@ module.exports.getTemp = async event => {
     };
   }
 };
-
-// Added test feature comment
