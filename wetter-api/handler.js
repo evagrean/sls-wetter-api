@@ -41,4 +41,3 @@ module.exports.getTemp = async event => {
     };
   }
 };
-// comment to test changes for push - merge - pull requests
