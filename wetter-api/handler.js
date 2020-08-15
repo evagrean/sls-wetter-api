@@ -47,7 +47,7 @@ module.exports.getTemp = async event => {
         },
       ),
     }
-  } else {
+  } else if (country == ! 'DE') {
     return {
       statusCode: 200,
       headers: {
