@@ -34,14 +34,14 @@ jobs:
         - STAGE_NAME=dev
         - *DEVELOPMENT_ENV 
 
-    # pull requests deploys to the 'PR#' stage
+    # pull requests deploy to the 'prod' stage after merged into master
     - <<: *DEPLOY_SERVICE_JOB
       name: "Deploy Wetter API"
       if: type = pull_request
       env:
         - SERVICE_PATH="wetter-api"
-        - STAGE_NAME=pr${TRAVIS_PULL_REQUEST}
-        - *DEVELOPMENT_ENV
+        - STAGE_NAME=prod
+        - *PRODUCTION_ENV
 
     # master branch deploys to the 'prod' stage
     - <<: *DEPLOY_SERVICE_JOB
