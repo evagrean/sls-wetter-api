@@ -12,7 +12,11 @@ functions:
        - http:
           path: wetter
           method: get
+          cors: true
           request:
             parameters:
               querystrings:
-                url: true
+                paramName: true
+ 
+plugins:
+- serverless-offline
