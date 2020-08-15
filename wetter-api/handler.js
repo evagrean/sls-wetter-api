@@ -14,8 +14,9 @@ module.exports.getTemp = async event => {
   const weatherInfo = await axios.get(apiURL);
   const city = weatherInfo.data.name;
   const temp = weatherInfo.data.main.temp;
+  const country = weatherInfo.data.sys.country;
 
-  if (weatherInfo.data.sys.country === 'DE') {
+  if (country === 'DE') {
     return {
       statusCode: 200,
       headers: {
@@ -35,10 +36,9 @@ module.exports.getTemp = async event => {
       },
       body: JSON.stringify(
         {
-          summary: `${city} ist keine deutsche Stadt.... Aber es hat dort gerade ${temp} °C`
+          summary: `Eigentlich reagiert der Endpoint ja nur auf deutsche Städtenamen... Aber wo wir schon dabei sind: In ${city} hat es gerade ${temp} °C`
         },
       )
     };
   }
 };
-// Hello from dev branch
