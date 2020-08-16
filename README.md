@@ -10,7 +10,7 @@
 
 ### Allgemeine Funktionsweise
 API muss einen Endpunkt zur Verfügung stellen, der auf einen HTTPS GET Request und einen deutschen Städtenamen als Parameter reagiert. Zurück kommen soll eine Response im JSON Format, die das Wetter in der angefragten Stadt als String in einem einzigen Satz zusammenfasst. 
-
+. | .
 ------------ | -------------
 **Endpoint:** | /wetter
 **Query Parameter:** | ?stadt=[EINE_DEUTSCHE_STADT_DER_WAHL]
