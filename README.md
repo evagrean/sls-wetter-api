@@ -1,136 +1,108 @@
 # Serverless Wetter API
 
-
-## Inhaltsübersicht
-* Allgemeine Informationen
-* Funktionen Anforderungen
-* API Endpoint
-* Verwendete Technologien und Resourcen
-* Setup
-* Schritte bei der Umsetzung
-* Herausforderungen und Problemstellungen
-
 ## Allgemeine Informationen
 
-Öffentliche, Serverless API, die auf Anfrage über die aktuelle Temperatur in einer deutschen Stadt informiert.  Die API wurde umgesetzt als Lambda Function mit NodeJS und auf Amazon AWS bereitgestellt. 
+Öffentliche, Serverless API, die auf Anfrage über die aktuelle Temperatur in einer deutschen Stadt informiert.  Die API wurde umgesetzt als Lambda Function mit NodeJS.
 
-## Funktionen und Features
+## Anforderungen
 
-* Stellt einen Endpunkt zur Verfügung, der auf einen HTTPS GET Request mit einem deutschen Städtenamen als Parameter eine Response im JSON Format liefert 
-* Response fasst das Wetter als String in einem einzigen Satz zusammenfasst.
-* API umgesetzt als Serverless Function mit NodeJS, deployt bei Amazon AWS
-* Integrierte CI (TravisCI)
-  * führt automatisch Tests aus, wenn Pull-Requests erstellt werden
-  * development branch deployt auf dev stage, master branch deployt auf prod stage
-  * Environment Variables: jeweils ein AWS user-account für deploys zu dev und prod stage 
-  * bei merge im master bzw. development wird automatisch deployt
+### Allgemeine Funktionsweise
+API muss einen Endpunkt zur Verfügung stellen, der auf einen HTTPS GET Request und einem deutschen Städtenamen als Parameter reagiert. Zurück kommen soll eine Response im JSON Format, die das Wetter in der angefragten Stadt als String in einem einzigen Satz zusammenfasst. 
 
-  
-  
-## Kriterien, die noch nicht erfüllt sind
+**Endpoint:** | /wetter
+------------ | -------------
+**Query Parameter:** | ?stadt=[EINE_DEUTSCHE_STADT_DER_WAHL]
+**Request Beispiel:** | https...
+**HTTP Method:** | GET
+**Response body data Format:** | JSON Objekt, das Wetter als String in einem einzigen Satz zusammenfasst. 
+**Response Beispiel:** | {"summary": "In Berlin hat es heute 31.15 °C"}
 
-* Unit und Integration Tests für Lambda Function selbst
-* Verwendung von TypeScript statt JavaScript
+### Weitere Kriterien
 
-## Endpoint
+* Das Projekt soll als Serverless Function mit NodeJS umgesetzt werden
+* Das Projekt soll bei einem Cloud Computing Service deployt werden
+* Das Projekt sollte ein selbst gewähltes Maß an Tests beinhalten
+* Das Projekt sollte eine einfache CI integriert haben, die automatisch Tests ausführt, wenn Pull Requests erstellt werden
 
-### Liefert eine Zusammenfasssung von Städtenamen und Temperatur in einem Satz
+### Bonus-Kriterien
 
-**Endpoint:** /wetter
+* CI so einrichten, dass alles, was in `master` gemergt wird, automatisch deployt wird
+* TypeScript statt JavaScript verwenden
 
-**Query Parameter:** ?stadt=[EINE_DEUTSCHE_STADT_DER_WAHL]
+## Arbeitschritte, um Kriterien zu erfüllen
 
-**HTTP Method:** GET
+### 1. Serverless Function
 
-**Request body Datenformat:** ---
+Als ersten Schritt habe ich mich um die logic des API gekümmert. Da ich schon zuvor einmal ein API mit NodeJS und `AWS Lambda`s gebaut habe und deshalb bereits einen AWS Account besitze, habe ich mich wieder für diesen Provider entschieden.
 
-**Response body data Format:** JSON Objekt, das Wetter als String in einem einzigen Satz zusammenfasst. 
-
-**Response Beispiel:** 
+Um den Service aufzusetzen, habe ich das `Serverless Framework` benutzt (u.a wg. nötiger Dependencies + serverless-offline plugin zum Testen). `Serverless` hatte ich schon global installiert.
+Begonnen habe ich dann mit einem Template:
 ```
-{
-  "summary": "In Berlin sind es heute 31.15 Grad Celsius"
-}
+sls create --template aws-nodejs
 ```
+Danach habe ich die `serverless.yml` Datei angepasst (z.B. `region` definiert, eine `getTemp` Funktion definiert und den `wetter` Endpoint). 
 
-## Technologien, Dependencies und Resourcen
+Um Anfragen an das API von openweathermap.org zu stellen, habe ich `axios` installiert, sowie das `serverless-offline-plugin`, um dann den Endpoint testen zu können. 
 
-* Node 12.17.0
-* axios 0.19.2
-* Serverless Framework  1.78.1 (besser als AWS SAM wegen der plugins)
-* serverless-offline 6.5.0
-* TravisCI
-* Cloud Provider: Amazon AWS
-* API von openweathermap.org
-
-## Wie ich das Setup gemacht habe
-
-### Lambda Function / wetter-api service erstellen
-
+Danach habe ich den Code bei AWS deployt
 ```
-$ npm serverless install -g
-$ mkdir sls-wetter-api
-$ cd sls-wetter-api
-$ serverless create --template aws-nodejs --path wetter-api
-$ npm init -y
-$ npm install axios
-$ npm install serverless-offline -D
+sls deploy
 ```
-* serverless.yml konfigurieren
+um zu prüfen, ob alles funktioniet (Näheres dazu im Abschnitt Tests).
 
-### GitHub Repository
+Zurückgreifen konnte ich bei beim Erstellen vor allem auf meine Erfahrungen aus einem vorherigen `Serverless Projekt`, an dem ich im Rahmen meines CareerFoundry Kurses gearbeitet habe. Einige "Gehirnknoten" konnte aber auch [dieser Post](http://toniando.com/posts/weather-in-venice-web-app-lambda-and-api-gateway/) lösen.
 
-### TravisCI
+Erst, nachdem ich ein funktionierendes MVP hatte, das erfolgreich Wetterdaten zur Verfügung stellt, habe ich mich um die Integrierung einer CI gekümmert. Der Grund: In dieses Konzept musste ich mich erst einarbeiten, da ich damit noch nicht gearbeitet habe.
 
-* .travis.yml file
-* GitHub App für sls-wetter-api Repository aktiviert
-* Environment Variables für dev und prod stages setzen
-* Job Template (deploy_service_job) in .travis.yml kreiert und Environment Variables eingesetzt
-* in serverless.yml custom.stage definiert
+### 2. CI
 
-### Voraussetzungen
-* AWS account bzw. 2 separate accounts für dev und prod
-* GitHub account
-* TravisCI account
-* Node (to use npm)
+Hier habe ich mich für TravisCI entschieden (Open Source und sitzen in Berlin :-)). Und um es vorweg zu nehmen: Tatsächlich habe ich es auch geschafft, es so einzurichten, dass (auf `prod` Stage) deployt wird, was ich in `master` merge. Auch führt die CI automatisch Tests aus, wenn Pull Requests erstellt werden. 
 
-## Allgemeine Herangehensweise und Arbeitsschritte 
+![Pull-Request GitHub](/assets/pullrequest.png)
 
-* Erstes Ziel: funktionierendes API / service 
-  * Basic Lambda Function mit serverless kreiert und geschaut, dass get request und Anfrage an Wetter-API funktionieren
-* Dann: Für TravisCI entschieden, Docs gelesen, Tutorials durchgegangen und setup gemacht
-* Zunächs hat dann wetter-api service nicht mehr funktioniert (lag an fehlenden node_modules bzw. package.json)
-* Probleme mit Pull-Requests bzw. zunächst an anderem Repository überhaupt Pull Requests ausprobiert und geübt
-* hatte zunächst .travis.yml so konfiguriert, dass Pull Requests in eigene stage deployt werden bzw. sofort deployt wurden und nicht erst nach merge
-* Lösung dafür: kein deploy_service_job für pull requests, sondern merge (push) löst job erst für dev oder master branch aus
+Da ich bei `GitHub` mit einer `development` und `master` Branch arbeite, wollte ich, dass die CI beide auch auf verschiedenen Stages hochlädt. In diesem Fall habe ich mich auch dazu entschieden, dafür 2 separate AWS User Accounts zu erstellen. Die AWS Credentials habe ich dann bei TravisCI in den `Environment Variables` hinterlegt.
 
-## Probleme und ihre Lösungen
+![AWS USer](/assets/aws-user.png)
 
-* wetter-api service hat zunächst nach Integrierung der CI nicht funktioniert
---> das lag daran, dass npm install im build Prozess nicht durchgeführt werden konnte, da kein package.json vorhanden war
---> Lösung: axios deinstalliert, npm init -y, axios wieder installiert, nochmal deployt
+Da die Arbeit mit einem CI absolutes Neuland für mich war, habe ich viel mit der Dokumentation von TravisCI gearbeitet. Aber auch  [dieser Blogbeitrag](https://seed.run/blog/how-to-build-a-cicd-pipeline-for-serverless-apps-with-travis-ci.html) sowie auch [dieses Tutorial](https://medium.com/swlh/setup-ci-cd-pipeline-for-aws-lambda-using-github-travis-ci-9812c8ef7199) haben mir sehr geholfen, wenn ich nicht weiterkam.
 
-## Tests
+### 3. Tests
 
-### Endpoint
+#### Lokale Tests
 
-* lokal mittels `serverless-offline plugin`
-* Postman 
-* Method Execution Test via Amazon API Gateway
+* `serverless invoke local`
+* `serverless-offline` plugin, um den API Endpoint zu testen
 
-### Lambda Function
-* `serverless-offline plugin`
-* `serverless local invoke`
+### Endpoint Tests
+
+* Postman
+* AWS: API Gateway Method Execution Test
 * TravisCI Builds
 
-### Unit und Integration Tests?
-* Serverless Architektur ist abhängig von Cloud Services, die man lokal schwer nachahmen kann
-* business logic sollte so geschrieben sein, dass sie vom Provider unabhängig ist. Das macht sie nicht von einem bestimmten Provider abhänging, wiederverwendbar und auch leichter testbar
-* z.B. mit Unit und Integration Tests
-* Und hier liegt das Problem: in meinem Fall ist die business logic an Lambdas event Object gebunden (wg. der queryStringParameter)
---> wie schreibe ich das um? 
+### Unit und Integration Tests
 
-### Verwendung von TypeScript statt JavaScript
-* serverless-bundle?
-* https://www.youtube.com/watch?v=tQWAy2YZERU
-* sls create -t aws-nodejs-typescript creates a template to use typescript
+Mein selbst gewähltes Maß an Tests entspricht in diesem Fall den oben genannten. Ich habe es leider nicht geschafft, meine Lambda Funktion so (um-) zu schreiben, dass die Einheiten, die ich testen möchte, nicht mehr an das `event` Objekt gebunden sind. Auch ist mir trotz langer Recherche noch nicht ganz klar, wie ich entsprechende mock-events für Funktionen erstellen kann, um diese lokal zu testen.
+
+Experimentiert habe ich mit `Jest` und simplen Lambda Funktionen ohne `events`. Um Unit und Integration Tests erfogreich für meine Wetter-API durchführen zu können, muss ich mich noch besser in dieses Thema einarbeiten. Dafür hat mir aber im Rahmen dieses Projektes die Zeit gefehlt.
+
+### 4. TypeScript
+
+TypeScript habe ich bereits in einem `Angular` Projekt verwendet, aber noch nie in Zusammenhang mit AWS Lambda oder Serverless Funktionen. 
+
+In diesem Fall habe ich zum Üben ein eigenes Mini-Projekt daraus gemacht, und meine `getTemp` Lambda Funktion unabhängig von diesem Projekt [hier noch einmal in TypeScript](https://github.com/evagrean/ts-sls-wetter-api) geschrieben.
+
+## Links
+
+Endpoint auf 'dev' Stage
+[]()
+Endpoint auf 'prod' Stage: 
+[]()
+
+## Danke für's Lesen
+
+Falls noch Fragen offen geblieben sind, beantworte ich sie jederzeit gerne.
+
+greiner.anzenbacher@gmail.com
+https://de.linkedin.com/in/eva-greiner-anzenbacher
+https://greiner-anzenbacher.com/
+

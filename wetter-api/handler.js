@@ -59,7 +59,7 @@ module.exports.getTemp = async event => {
       },
       body: JSON.stringify(
         {
-          summary: `Interessiert am Wetter in ${city}, obwohl keine deutsche Stadt? Aktuell hier gerade ${temp} °C`
+          summary: `Du bist interessiert am Wetter in ${city}, obwohl keine deutsche Stadt? --- Aktuell hier gerade ${temp} °C`
         },
       ),
     };

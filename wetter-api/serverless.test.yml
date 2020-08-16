@@ -1,6 +1,0 @@
-name: wetter endpoint returns 200
-endpoint:
-function: getTemp
-response: 
-body: 
-foo: bar
