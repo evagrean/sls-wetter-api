@@ -21,10 +21,10 @@ API muss einen Endpunkt zur Verfügung stellen, der auf einen HTTPS GET Request 
 
 ### Weitere Kriterien
 
-* Das Projekt sollte als Serverless Function mit NodeJS umgesetzt werden
-* Das Projekt sollte bei einem Cloud Computing Service deployt werden
-* Das Projekt sollte ein selbst gewähltes Maß an Tests beinhalten
-* Das Projekt sollte eine einfache CI integriert haben, die automatisch Tests ausführt, wenn Pull Requests erstellt werden
+* das Projekt sollte als Serverless Function mit NodeJS umgesetzt werden
+* das Projekt sollte bei einem Cloud Computing Service deployt werden
+* das Projekt sollte ein selbst gewähltes Maß an Tests beinhalten
+* das Projekt sollte eine einfache CI integriert haben, die automatisch Tests ausführt, wenn Pull Requests erstellt werden
 
 ### Bonus-Kriterien
 
@@ -35,7 +35,7 @@ API muss einen Endpunkt zur Verfügung stellen, der auf einen HTTPS GET Request 
 
 ### 1. Serverless Function
 
-Als ersten Schritt habe ich mich um die logic des API gekümmert. Da ich schon zuvor einmal eine API mit NodeJS und **AWS Lambda** gebaut habe und deshalb bereits einen AWS Account besitze, habe ich mich wieder für diesen Provider entschieden.
+Als ersten Schritt habe ich mich um die logic des API gekümmert. Ich habe bereits eine API mit NodeJS und **AWS Lambda** gebaut und besitze einen AWS Account. Deshalb habe ich mich wieder für diesen Provider entschieden.
 
 Um den Service aufzusetzen, habe ich das **Serverless Framework** benutzt. `Serverless` hatte ich schon global installiert.
 Begonnen habe ich dann mit einem Template:
@@ -50,23 +50,23 @@ Danach habe ich den Code bei AWS deployt
 ```
 sls deploy
 ```
-und den Endpoint live getestet (Mehr dazu siehe Abschnitt **Tests**).
+und den Endpoint live getestet (mehr dazu siehe Abschnitt **Tests**).
 
-Zurückgreifen konnte ich bei beim Erstellen vor allem auf meine Erfahrungen aus einem vorherigen `Serverless Projekt`, an dem ich im Rahmen meines CareerFoundry Kurses gearbeitet habe. Gute Quellen auch die Docs des [Serverless Framework](https://www.serverless.com/framework/docs/). Einige "Gehirnknoten" konnte aber auch [dieser Post](http://toniando.com/posts/weather-in-venice-web-app-lambda-and-api-gateway/) lösen. 
+Zurückgreifen konnte ich bei beim Erstellen vor allem auf meine Erfahrungen aus einem vorherigen `Serverless Projekt`. Eine gute Quelle waren auch die Docs des [Serverless Framework](https://www.serverless.com/framework/docs/). Einige "Gehirnknoten" konnte [dieser Post](http://toniando.com/posts/weather-in-venice-web-app-lambda-and-api-gateway/) lösen. 
 
-Erst, nachdem ich eine funktionierende API hatte, deren Endpoint erfolgreich Wetterdaten zur Verfügung stellt, habe ich mich um die Integrierung einer CI gekümmert. Der Grund: In dieses Konzept musste ich mich erst einarbeiten, da ich damit noch nicht gearbeitet habe.
+Nachdem ich eine funktionierende API hatte, deren Endpoint erfolgreich Wetterdaten zur Verfügung stellt, habe ich mich um die Integrierung einer CI gekümmert. In dieses Konzept musste ich mich erst einarbeiten.
 
 ### 2. CI
 
-Hier habe ich mich für **TravisCI** entschieden. Tatsächlich habe ich es auch geschafft, es so einzurichten, dass (auf `prod` Stage) deployt wird, was ich in `master` merge. Auch führt die CI automatisch Tests aus, wenn Pull Requests erstellt werden. 
+Hier habe ich mich für **TravisCI** entschieden. Ich konnte die CI so einrichten, dass (auf `prod` Stage) deployt wird, was ich in `master` merge. Auch führt die CI automatisch Tests aus, wenn Pull Requests erstellt werden. 
 
 ![Pull-Request GitHub](/assets/pullrequest.png)    ![Travis Builds](/assets/builds.png)
 
-Da ich bei `GitHub` mit einer `development` und `master` Branch arbeite, wollte ich, dass die CI beide auch auf verschiedenen Stages hochlädt. In diesem Fall bin ich  [diesem Blogbeitrag](https://seed.run/blog/how-to-build-a-cicd-pipeline-for-serverless-apps-with-travis-ci.html)gefolgt und habe dafür 2 separate AWS User Accounts erstellt. Die AWS Credentials habe ich dann bei TravisCI in den `Environment Variables` hinterlegt.
+Da ich mit einer `development` und `master` Branch arbeite, wollte ich, dass die CI beide auch auf verschiedenen Stages hochlädt. In diesem Fall bin ich [diesem Blogbeitrag](https://seed.run/blog/how-to-build-a-cicd-pipeline-for-serverless-apps-with-travis-ci.html) gefolgt und habe dafür zwei separate AWS User Accounts erstellt. Die AWS Credentials habe ich dann bei TravisCI in den `Environment Variables` hinterlegt.
 
 ![AWS User](/assets/aws-user.png) ![Travis Env Var](/assets/travis-env.png)
 
-Da die Arbeit mit einem CI absolutes Neuland für mich war, habe ich viel mit der Dokumentation von TravisCI gearbeitet. Aber [dieses Tutorial](https://medium.com/swlh/setup-ci-cd-pipeline-for-aws-lambda-using-github-travis-ci-9812c8ef7199) hat mir sehr geholfen.
+Hier habe ich viel mit der Dokumentation von TravisCI gearbeitet. Auch [dieses Tutorial](https://medium.com/swlh/setup-ci-cd-pipeline-for-aws-lambda-using-github-travis-ci-9812c8ef7199) hat mir sehr geholfen.
 
 ### 3. Tests
 
@@ -90,15 +90,15 @@ Da die Arbeit mit einem CI absolutes Neuland für mich war, habe ich viel mit de
 
 #### Unit und Integration Tests
 
-Mein selbst gewähltes Maß an Tests entspricht in diesem Fall den oben genannten. Ich habe es leider nicht geschafft, meine Lambda Funktion so (um-) zu schreiben, dass die Einheiten, die ich testen möchte, nicht mehr an das `event` Objekt gebunden sind. Auch ist mir trotz langer Recherche noch nicht ganz klar, wie ich entsprechende mock-events für Funktionen erstellen kann, um diese lokal zu testen.
+Mein selbst gewähltes Maß an Tests entspricht in diesem Fall den oben genannten. Ich habe es leider nicht geschafft, meine Lambda Funktion so (um-) zu schreiben, dass die Einheiten, die ich testen möchte, nicht mehr an das `event` Objekt gebunden sind. Auch ist mir trotz langer Recherche noch nicht vollständig klar, wie ich entsprechende mock-events für Funktionen erstellen kann, um diese lokal zu testen.
 
-Experimentiert habe ich mit `Jest` und simplen Lambda Funktionen ohne `events`. Um Unit und Integration Tests erfogreich für meine Wetter-API durchführen zu können, muss ich mich noch besser in dieses Thema einarbeiten. Dafür hat mir aber im Rahmen dieses Projektes die Zeit gefehlt.
+Experimentiert habe ich mit `Jest` und simplen Lambda Funktionen ohne `events`. Um Unit und Integration Tests erfogreich für meine Wetter-API durchführen zu können, würde ich mehr Zeit benötigen.
 
 #### 4. TypeScript
 
-TypeScript habe ich bereits in einem `Angular` Projekt verwendet, aber noch nie in Zusammenhang mit AWS Lambda oder Serverless Funktionen. 
+TypeScript habe ich bereits in einem `Angular` Projekt verwendet, nicht jedoch mit AWS Lambda oder Serverless Funktionen. 
 
-In diesem Fall habe ich zum Üben ein eigenes Mini-Projekt daraus gemacht, und meine `getTemp` Lambda Funktion unabhängig von diesem Projekt [hier noch einmal in TypeScript](https://github.com/evagrean/ts-sls-wetter-api) geschrieben.
+In diesem Fall habe ich ein eigenes Mini-Projekt daraus gemacht, und meine `getTemp` Lambda Funktion unabhängig von diesem Projekt [hier noch einmal in TypeScript](https://github.com/evagrean/ts-sls-wetter-api) geschrieben.
 
 ## Links
 
