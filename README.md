@@ -108,7 +108,7 @@ In diesem Fall habe ich ein eigenes Mini-Projekt daraus gemacht, und meine `getT
 
 **Endpoint auf 'prod' Stage:** 
 
-[https://vq0pl8jzv5.execute-api.eu-central-1.amazonaws.com/prod/wetter?stadt=berlin](https://vq0pl8jzv5.execute-api.eu-central-1.amazonaws.com/prod/wetter?stadt=berlin)
+[https://vq0pl8jzv5.execute-api.eu-central-1.amazonaws.com/prod/wetter](https://vq0pl8jzv5.execute-api.eu-central-1.amazonaws.com/prod/wetter)
 
 ## Danke
 
